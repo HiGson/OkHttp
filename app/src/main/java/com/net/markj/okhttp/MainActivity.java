@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.ImageView;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Random;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -30,9 +32,12 @@ public class MainActivity extends AppCompatActivity {
     private OkHttpClient okHttpClient;
     private Request request;
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String IMG_URL = "";
+    private ArrayList<String> imgUrlList;
     private static final int SUCCESS = 1;
     private static final int FAIL = 2;
     private ImageView img;
+    private Random random;
 
     private Handler handler = new Handler() {
         @Override
@@ -41,11 +46,11 @@ public class MainActivity extends AppCompatActivity {
             switch (msg.what){
                 case SUCCESS:
                     byte[] bytes = (byte[]) msg.obj;
-//                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-//                    img.setImageBitmap(bitmap);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+                    img.setImageBitmap(bitmap);
 
                     // 使用Picasso裁剪后展示
-                    img.setImageBitmap(new CropSqureTransform().transform(BitmapFactory.decodeByteArray(bytes,0,bytes.length)));
+//                    img.setImageBitmap(new CropSqureTransform().transform(BitmapFactory.decodeByteArray(bytes,0,bytes.length)));
                     break;
                 case FAIL:
                     break;
@@ -58,8 +63,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         img = findViewById(R.id.img);
+        imgUrlList = new ArrayList();
+        imgUrlList.add("https://t2.hddhhn.com/uploads/tu/201501/871/11.jpg");
+        imgUrlList.add("http://www.fpwap.com/UploadFiles/article/bagua/2015/01/09/1420797277171580.png");
+        imgUrlList.add("http://www.fpwap.com/UploadFiles/article/bagua/2015/01/09/1420797277699955.png");
+        imgUrlList.add("http://www.fpwap.com/UploadFiles/article/bagua/2015/01/09/1420797277468777.png");
+        imgUrlList.add("http://www.fpwap.com/UploadFiles/article/bagua/2015/01/09/1420797278902420.png");
+        imgUrlList.add("http://www.fpwap.com/UploadFiles/article/bagua/2015/01/09/1420797278112407.png");
         okHttpClient = new OkHttpClient();
-        request = new Request.Builder().get().url("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1551636220656&di=d29851d1c1eacb6fb0f377005c2535c7&imgtype=0&src=http%3A%2F%2Fimg10.360buyimg.com%2Fimgzone%2Fjfs%2Ft2824%2F349%2F818203518%2F140577%2Fa8452f9c%2F5727572cN466b044e.jpg").build();
 
     }
 
@@ -68,6 +79,11 @@ public class MainActivity extends AppCompatActivity {
      * @param view
      */
     public void downLoadPic(View view) {
+        random = new Random();
+        int index = random.nextInt(imgUrlList.size() - 1);
+
+        request = new Request.Builder().get().url(imgUrlList.get(index)).build();
+
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
