@@ -6,8 +6,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+
+import com.net.markj.okhttp.okhttp.OkManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,12 +35,13 @@ public class MainActivity extends AppCompatActivity {
     private OkHttpClient okHttpClient;
     private Request request;
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final String IMG_URL = "";
+    private static final String json_url = "http://www.kuaidi100.com/query?type=debangwuliu&postid=5646916148";
     private ArrayList<String> imgUrlList;
     private static final int SUCCESS = 1;
     private static final int FAIL = 2;
     private ImageView img;
     private Random random;
+    private OkManager okManager;
 
     private Handler handler = new Handler() {
         @Override
@@ -71,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         imgUrlList.add("http://www.fpwap.com/UploadFiles/article/bagua/2015/01/09/1420797278902420.png");
         imgUrlList.add("http://www.fpwap.com/UploadFiles/article/bagua/2015/01/09/1420797278112407.png");
         okHttpClient = new OkHttpClient();
-
+        okManager = OkManager.getInstance();
     }
 
     /**
@@ -101,6 +105,15 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     handler.sendEmptyMessage(FAIL);
                 }
+            }
+        });
+    }
+
+    public void getJsonString(View view) {
+        okManager.asyncRequestJsonString(json_url, new OkManager.Func1() {
+            @Override
+            public void onResponce(String result) {
+                Log.v(TAG,result);
             }
         });
     }

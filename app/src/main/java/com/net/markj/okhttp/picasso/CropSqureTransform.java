@@ -1,8 +1,6 @@
-package com.net.markj.okhttp;
+package com.net.markj.okhttp.picasso;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
 import com.squareup.picasso.Transformation;
 
 /**
