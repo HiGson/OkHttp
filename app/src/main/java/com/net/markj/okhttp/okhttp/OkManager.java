@@ -159,7 +159,7 @@ public class OkManager {
     }
 
     /**
-     * 异步提交键值对
+     * 异步提交表单
      *
      * @param url
      * @param params
@@ -189,7 +189,7 @@ public class OkManager {
     }
 
     /**
-     * 异步上传Multipart文件
+     * 异步提交表单，同时还能上传Multipart文件，
      * 我们在有些情况下既要上传文件还要上传其他类型字段。比如在个人中心我们可以修改名字，年龄，修改图像，这其实就是一个表单。
      * 这里我们用到MuiltipartBody ,它 是RequestBody 的一个子类,我们提交表单就是利用这个类来构建一个 RequestBody
      * @param url
