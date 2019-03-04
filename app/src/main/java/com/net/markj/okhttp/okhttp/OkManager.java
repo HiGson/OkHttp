@@ -1,6 +1,7 @@
 package com.net.markj.okhttp.okhttp;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
 import org.json.JSONObject;
@@ -68,6 +69,72 @@ public class OkManager {
     }
 
     /**
+     * 异步请求返回JSonObject对象
+     * @param url
+     * @param callback
+     */
+    public void asyncRequestJsonObject(String url, Func2 callback){
+        Request request = new Request.Builder().url(url).get().build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response != null && response.isSuccessful()){
+                    onSuccessJsonObjectMethod(response.body().string(),callback);
+                }
+            }
+        });
+    }
+
+    /**
+     * 异步请求返回byte[]数组
+     * @param url
+     * @param callback
+     */
+    public void asyncRequestByteArray(String url,Func3 callback){
+        Request request = new Request.Builder().url(url).get().build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response != null && response.isSuccessful()){
+                    onSuccessByteArrayMethod(response.body().bytes(),callback);
+                }
+            }
+        });
+    }
+
+    /**
+     * 异步请求返回Bitmap对象
+     * @param url
+     * @param callback
+     */
+    public void asyncRequestBitmap(String url, Func4 callback){
+        Request request = new Request.Builder().url(url).get().build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response != null && response.isSuccessful()){
+                    callback.onResponce(BitmapFactory.decodeByteArray(response.body().bytes(),0,response.body().bytes().length));
+                }
+            }
+        });
+    }
+
+    /**
      * 请求返回的结果是json字符串
      * @param jsonValue
      * @param callback
@@ -127,18 +194,30 @@ public class OkManager {
         });
     }
 
+    /**
+     * 返回Json字符串回调接口
+     */
     public interface Func1{
         void onResponce(String result);
     }
 
+    /**
+     * 返回JsonObject对象回调接口
+     */
     public interface Func2{
         void onResponce(JSONObject jsonObject);
     }
 
+    /**
+     * 返回字节数组回调接口
+     */
     public interface Func3{
         void onResponce(byte[] bytes);
     }
 
+    /**
+     * 返回Bitmap对象回调接口
+     */
     public  interface Func4{
         void onResponce(Bitmap bitmap);
     }
